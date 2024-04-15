@@ -32,7 +32,7 @@ export class windowManager {
         windowStage.setWindowLayoutFullScreen(true) //true  设置全屏
         //获取安全区高度并AppStoage存储
         const area = windowStage.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
-        AppStorage.setOrCreate('topHeight', area.topRect)
+        AppStorage.setOrCreate('topHeight', area.topRect.height)
       })
   }
 

@@ -1,5 +1,6 @@
 import { promptAction, router } from '@kit.ArkUI'
 import { Auth } from '../../common/utils/Auth'
+import { Logger } from '../../common/utils/Logger'
 import { Request } from '../../common/utils/request'
 import { UserLogin } from '../../models/UserLoginModel'
 import { UserModel } from '../../models/UserModel'
@@ -13,35 +14,35 @@ struct LoginPage {
   @State isAgree: boolean = true //默认是false  现在设置true 是为了登陆方便
   @State loading: boolean = false
 
-  login() {
-    if (!this.username) {
-      return promptAction.showToast({
-        message: "请输入用户名"
-      })
-    }
-    if (!this.password) {
-      return promptAction.showToast({
-        message: "请输入密码"
-      })
-    }
-    if (!this.isAgree) {
-      return promptAction.showToast({ message: '请勾选已阅读并同意' })
-    }
-    this.loading = true
-    Request.post<UserModel>('login', {
-      username: this.username,
-      password: this.password
-    } as UserLogin)
-      .then(res => {
-        promptAction.showToast({
-          message: JSON.stringify(res.data)
+  async login() {
+    try {
+      if (!this.username) {
+        return promptAction.showToast({
+          message: "请输入用户名"
         })
-        Auth.setUser(res.data)
-        router.pushUrl({
-          url: "/pages/Index".slice(1)
+      }
+      if (!this.password) {
+        return promptAction.showToast({
+          message: "请输入密码"
         })
-        this.loading = false
+      }
+      if (!this.isAgree) {
+        return promptAction.showToast({ message: '请勾选已阅读并同意' })
+      }
+      this.loading = true
+      const res = await Request.post<UserModel>('login', {
+        username: this.username,
+        password: this.password
+      } as UserLogin)
+      //存储用户Token等信息
+      Auth.setUser(res.data)
+      router.pushUrl({
+        url: "/pages/Index".slice(1)
       })
+      this.loading = false
+    } catch (err) {
+      Logger.error(JSON.stringify(err))
+    }
   }
 
   build() {

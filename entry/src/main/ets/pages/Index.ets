@@ -1,4 +1,3 @@
-import { Auth } from '../common/utils/Auth'
 import { windowManager } from '../common/utils/windowManager'
 import { Home } from '../views/home/Home'
 import { Mine } from '../views/mine/Mine'

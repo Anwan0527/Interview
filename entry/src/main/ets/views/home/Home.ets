@@ -3,6 +3,7 @@ import { HdSearch } from './HdSearch'
 import { promptAction } from '@kit.ArkUI'
 import { Request } from '../../common/utils/request'
 import { UserModel } from '../../models/UserModel'
+import { HomeCategoryComp } from './HomeCategoryComp'
 
 @Component
 export struct Home {
@@ -58,6 +59,9 @@ export struct Home {
       .indicator(DotIndicator.dot()
         .selectedColor(Color.White)
         .bottom(20))
+
+      //题目分类组件
+      HomeCategoryComp()
 
     }
     .width("100%")

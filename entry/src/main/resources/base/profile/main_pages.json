@@ -1,7 +1,9 @@
 {
   "src": [
     "pages/Index",
-    "pages/LoginPage",
-    "pages/PreviewWebPage"
+    "pages/Login/LoginPage",
+    "pages/PreviewWebPage",
+    "pages/Login/WechatLoginPage",
+    "pages/AboutOur"
   ]
 }

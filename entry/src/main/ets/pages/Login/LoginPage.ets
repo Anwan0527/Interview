@@ -1,11 +1,48 @@
-import { router } from '@kit.ArkUI'
+import { promptAction, router } from '@kit.ArkUI'
+import { Auth } from '../../common/utils/Auth'
+import { Request } from '../../common/utils/request'
+import { UserLogin } from '../../models/UserLoginModel'
+import { UserModel } from '../../models/UserModel'
+
 
 @Entry
 @Component
 struct LoginPage {
   @State username: string = 'hmheima'
   @State password: string = 'Hmheima%123'
-  @State isAgree: boolean = false
+  @State isAgree: boolean = true //默认是false  现在设置true 是为了登陆方便
+  @State loading: boolean = false
+
+  login() {
+    if (!this.username) {
+      return promptAction.showToast({
+        message: "请输入用户名"
+      })
+    }
+    if (!this.password) {
+      return promptAction.showToast({
+        message: "请输入密码"
+      })
+    }
+    if (!this.isAgree) {
+      return promptAction.showToast({ message: '请勾选已阅读并同意' })
+    }
+    this.loading = true
+    Request.post<UserModel>('login', {
+      username: this.username,
+      password: this.password
+    } as UserLogin)
+      .then(res => {
+        promptAction.showToast({
+          message: JSON.stringify(res.data)
+        })
+        Auth.setUser(res.data)
+        router.pushUrl({
+          url: "/pages/Index".slice(1)
+        })
+        this.loading = false
+      })
+  }
 
   build() {
     Column() {
@@ -28,12 +65,12 @@ struct LoginPage {
       //  登录区域
       Column({ space: 20 }) {
 
-        TextInput({ text: this.username })
+        TextInput({ text: $$this.username })
           .backgroundColor(Color.White)
           .width('90%')
           .borderRadius(0)
 
-        TextInput({ text: this.password })
+        TextInput({ text: $$this.password })
           .type(InputType.Password)
           .backgroundColor(Color.White)
           .width('90%')
@@ -67,13 +104,20 @@ struct LoginPage {
         }
         .width('90%')
 
-        Button() {
+        Button({ type: ButtonType.Normal }) {
           Row() {
-            LoadingProgress()
-              .height(28)
-              .aspectRatio(1)
-              .color(Color.White)
+            if (this.loading) {
+              LoadingProgress()
+                .height(28)
+                .aspectRatio(1)
+                .color(Color.White)
+                .enableLoading(this.loading)
+            }
             Text('登录')
+              .onClick(() => {
+                this.login()
+              })
+              .textAlign(TextAlign.Center)
           }
         }
         .borderRadius(4)

@@ -3,14 +3,18 @@ import webview from '@ohos.web.webview'
 @Entry
 @Component
 struct PreviewWebPage {
-  webViewController: webview.WebviewController = new webview.WebviewController()
+  webViewController: WebviewController = new webview.WebviewController()
 
   build() {
-    Column() {
-      Web({
-        src: $rawfile('index.html'),
-        controller: this.webViewController
-      })
+    Navigation() {
+      Column() {
+        Web({
+          src: $rawfile('index.html'),
+          controller: this.webViewController
+        })
+      }
     }
+    .title("隐私政策")
+    .titleMode(NavigationTitleMode.Mini)
   }
 }

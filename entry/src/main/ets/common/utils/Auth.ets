@@ -2,7 +2,8 @@
 import { UserModel } from '../../models/UserModel'
 import { router } from '@kit.ArkUI'
 
-const USER_KEY = 'USER_KEY'
+export const USER_KEY = 'USER_KEY'
+
 const PASS_LIST = ['pages/LoginPage']
 
 export class Auth {

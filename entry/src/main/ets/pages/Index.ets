@@ -1,5 +1,6 @@
 import { Auth } from '../common/utils/Auth'
 import { windowManager } from '../common/utils/windowManager'
+import { Home } from '../views/home/Home'
 import { Mine } from '../views/mine/Mine'
 
 
@@ -21,7 +22,7 @@ struct Index {
   }
 
   aboutToAppear(): void {
-    Auth.initLocalUser()
+    // Auth.initLocalUser()
     windowManager.enableFullScreen() //开启沉浸式
   }
 
@@ -31,7 +32,7 @@ struct Index {
         Tabs() {
           TabContent() {
             if (this.currentIndex == 0) {
-              Text('首页')
+              Home()
             }
           }.tabBar(this.tabBuilder('首页', 0, $r("app.media.tabbar_home"), $r("app.media.tabbar_home_fill")))
 
@@ -61,6 +62,9 @@ struct Index {
           this.currentIndex = index
         })
       }
+      .margin({
+        bottom: 15
+      })
       .width('100%')
     }
     .height('100%')

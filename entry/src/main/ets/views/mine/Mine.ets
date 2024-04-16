@@ -1,6 +1,12 @@
 import { Logger } from '../../common/utils/Logger'
 import { windowManager } from '../../common/utils/windowManager'
 import router from '@ohos.router'
+import { Request } from '../../common/utils/request'
+import { Auth, USER_KEY } from '../../common/utils/Auth'
+
+import { promptAction } from '@kit.ArkUI'
+import { User, UserModel } from '../../models/UserModel'
+import { HdClockIn } from '../home/HdClockIn'
 
 interface Nav {
   icon: ResourceStr
@@ -22,6 +28,22 @@ export struct Mine {
   // 在AppStorage中获取到安全区域的高度数值
   @StorageProp('topHeight') toHeight: number = 0
   @State clockCount: number = 0
+  @State Userlist: Partial<UserModel> = {} as User
+
+  async updateUser() { //获取
+    // promptAction.showToast({
+    //   message: JSON.stringify(Auth.getUser().token)
+    // })
+    try {
+      const res = await Request.get<UserModel>('userInfo') //获取个人信息
+      this.Userlist = res.data
+    } catch (err) {
+      promptAction.showToast({
+        message: JSON.stringify(err)
+      })
+    }
+
+  }
 
   @Builder
   toolsBuilder(tool: Tool) {
@@ -83,7 +105,10 @@ export struct Mine {
 
   // 进入页面
   aboutToAppear(): void {
+    Auth.initLocalUser()
     windowManager.settingStatusBarLight() // 开启当前页面的状态栏文字颜色为白色
+    // this.getUserList()
+    this.updateUser()
   }
 
   // 离开页面
@@ -100,7 +125,7 @@ export struct Mine {
         space: 12
       }) {
         //头像
-        Image($r("app.media.ic_mine_avatar"))
+        Image(this.Userlist.avatar)// Image($r("app.media.ic_mine_avatar"))
           .width(55)
           .aspectRatio(1)
           .borderRadius(55)
@@ -109,7 +134,7 @@ export struct Mine {
           space: 4
         }) {
           //微信用户
-          Text("昵称")
+          Text(this.Userlist.nickName)
             .fontSize(18)
             .fontWeight(500)
             .width("100%")
@@ -140,7 +165,7 @@ export struct Mine {
         .alignItems(HorizontalAlign.Start)
 
         //打卡
-        Text("打卡位置")
+        HdClockIn()
       }
       .width("100%")
       .height(100)
@@ -159,7 +184,10 @@ export struct Mine {
           icon: $r("app.media.ic_mine_like"), name: '我的点赞'
         })
         this.navBuilder({
-          icon: $r("app.media.ic_mine_study"), name: '累计学识', other: '4小时', onClick: () => {
+          icon: $r("app.media.ic_mine_study"),
+          name: '累计学识',
+          other: `${this.Userlist.totalTime}小时`,
+          onClick: () => {
             router.pushUrl({ url: "跳转学时页面" }) //todo  跳转学时页面
           }
         })

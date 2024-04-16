@@ -1,6 +1,6 @@
 import { HdResponse } from '../../models/HttpResponseModel'
 import http from '@ohos.net.http'
-import { Auth as authStore } from './Auth'
+import { Auth } from './Auth'
 import { promptAction, router } from '@kit.ArkUI'
 import { BusinessError } from '@kit.BasicServicesKit'
 
@@ -31,7 +31,7 @@ class HdHttp {
     , expectDataType: http.HttpDataType.OBJECT
     }
 
-    const currentUser = authStore.getUser()
+    const currentUser = Auth.getUser()
 
     if (currentUser.token && options.header) {
       options.header['Authorization'] = `Bearer ${currentUser.token}`
@@ -42,7 +42,7 @@ class HdHttp {
         const result = res.result as HdResponse<T>
         if (result.code === 401) {
           promptAction.showToast({ message: 'token失效' })
-          authStore.delUser()
+          Auth.delUser()
           router.pushUrl({
             url: 'pages/LoginPage'
           }, router.RouterMode.Single)
@@ -74,7 +74,7 @@ class HdHttp {
       options.extraData = extraData
     }
 
-    const currentUser = authStore.getUser()
+    const currentUser = Auth.getUser()
 
     if (currentUser.token && options.header) {
       options.header['Authorization'] = `Bear ${currentUser.token}}`
@@ -84,7 +84,7 @@ class HdHttp {
       if (res.result) {
         const result = res.result as HdResponse<T>
         if (result.code === 401) {
-          authStore.delUser()
+          Auth.delUser()
           router.pushUrl({
             url: 'pages/LoginPage'
           }, router.RouterMode.Single)

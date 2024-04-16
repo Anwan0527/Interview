@@ -14,6 +14,10 @@ struct LoginPage {
   @State isAgree: boolean = true //默认是false  现在设置true 是为了登陆方便
   @State loading: boolean = false
 
+  aboutToAppear(): void {
+    Auth.initLocalUser()
+  }
+
   async login() {
     try {
       if (!this.username) {
@@ -27,6 +31,7 @@ struct LoginPage {
         })
       }
       if (!this.isAgree) {
+        this.isAgree = true
         return promptAction.showToast({ message: '请勾选已阅读并同意' })
       }
       this.loading = true
@@ -36,6 +41,9 @@ struct LoginPage {
       } as UserLogin)
       //存储用户Token等信息
       Auth.setUser(res.data)
+      // promptAction.showToast({
+      //   message: JSON.stringify(Auth.getUser())
+      // })
       router.pushUrl({
         url: "/pages/Index".slice(1)
       })

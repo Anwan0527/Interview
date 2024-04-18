@@ -10,6 +10,8 @@ export struct QuestionListComp {
   qid: number = 0
   @State list: QuestionItemRow[] = []
   @State op: string = ''
+  @State isRefreshing: boolean = false
+  @State page: number = 1
 
   aboutToAppear() {
     this.getRow()
@@ -33,16 +35,20 @@ export struct QuestionListComp {
 
   build() {
     Column() {
-      List() {
-        ForEach(this.list, (item: QuestionItemRow) => {
-          ListItem() {
-            QuestionItemComp({ item })
-              .padding({ left: 10, right: 10 })
-
-          }
-
-        })
+      Refresh({ refreshing: $$this.isRefreshing }) {
+        List() {
+          ForEach(this.list, (item: QuestionItemRow) => {
+            ListItem() {
+              QuestionItemComp({ item })
+                .padding({ left: 10, right: 10 })
+            }
+          })
+        }
       }
+      .onRefreshing(async () => {
+        await this.getRow()
+        this.isRefreshing = false
+      }) //刷新 直到列表生成后 结束刷新
 
     }
   }

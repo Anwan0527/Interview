@@ -1,11 +1,15 @@
 //题目列表单个内容item组件
 import { HdTag } from '../../common/components/HdTag'
-import { QuestionItemRow, QuestionItemRowModel } from '../../models/QuestionItemModel'
+import { QuestionItem, QuestionItemRow, QuestionItemRowModel } from '../../models/QuestionItemModel'
+import { promptAction } from '@kit.ArkUI'
+import { Request } from '../../common/utils/request'
 
 
 @Component
 export struct QuestionItemComp {
   item: QuestionItemRowModel = {} as QuestionItemRow
+
+
 
   @Builder
   SplitBuilder() {

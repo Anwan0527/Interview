@@ -12,7 +12,6 @@ PersistentStorage.persistProp(TOKEN_KEY, "")
 export struct HdClockIn {
   @Prop
   clockCount: number = 0
-  @StorageProp(TOKEN_KEY) token: string = ''
 
   async ClockIn() {
     try {
@@ -21,7 +20,7 @@ export struct HdClockIn {
     }
     catch (err) {
       promptAction.showToast({
-        message: "有问题"
+        message: JSON.stringify(err)
       })
     }
   }

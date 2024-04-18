@@ -2,6 +2,7 @@
 import { QuestionType, QuestionTypeModel } from '../../models/QuestionTypeModel'
 import { promptAction } from '@kit.ArkUI'
 import { Request } from '../../common/utils/request'
+import { QuestionListComp } from './QuestionListComp'
 
 
 @Component
@@ -19,7 +20,7 @@ export struct HomeCategoryComp {
       const res = await Request.get<QuestionTypeModel[]>('question/type')
       this.questionTypeList = res.data
       // promptAction.showToast({
-      //   message: JSON.stringify(res.code)
+      //   message: JSON.stringify(res.data)
       // })
     } catch (err) {
       promptAction.showToast({
@@ -60,7 +61,9 @@ export struct HomeCategoryComp {
       Tabs({ index: this.index }) {
         ForEach(this.questionTypeList, (item: QuestionTypeModel, index: number) => {
           TabContent() {
-            Text('题目列表' + index)
+            QuestionListComp({
+              qid: item.id
+            })
           }.tabBar(this.TabItemBuilder(item, index))
         })
       }

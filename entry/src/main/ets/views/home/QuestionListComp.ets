@@ -1,41 +1,29 @@
 //题目列表组件
+import { Request } from '../../common/utils/request'
+import { QuestionItem, QuestionItemRow } from '../../models/QuestionItemModel'
 import { QuestionItemComp } from './QuestionItemComp'
 import { promptAction } from '@kit.ArkUI'
-import { Request } from '../../common/utils/request'
-import { QuestionItem, QuestionItemModel, QuestionItemRow, QuestionItemRowModel } from '../../models/QuestionItemModel'
 
 
 @Component
 export struct QuestionListComp {
-  @State QuestionList: QuestionItemRowModel[] = []
-  @Prop
-  questionType: number
-  @Prop
-  @Watch('initQuestionList')
-  activeIndex: number
-  @Prop
-  selfIndex: number
+  qid: number = 0
+  @State list: QuestionItemRow[] = []
+  @State op: string = ''
 
-  aboutToDisappear() {
-    this.initQuestionList()
+  aboutToAppear() {
+    this.getRow()
   }
 
-  initQuestionList() {
-    if (this.activeIndex === this.selfIndex && this.QuestionList.length === 0) {
-      this.getQuestionList()
-    }
-  }
-
-  async getQuestionList() {
+  async getRow() {
     try {
+      this.op = 'questionBankType=10&type=' + this.qid
+      const res = await Request.get<QuestionItem>('question/list?' + this.op)
+      this.list = res.data.rows!
       // promptAction.showToast({
-      //   message: "触发了"
+      //   message: JSON.stringify(res.data)
       // })
-      const res = await Request.get<QuestionItemModel>('question/list')
-      this.QuestionList = res.data.rows!
-      // promptAction.showToast({
-      //   message: JSON.stringify(this.QuestionList)
-      // })
+
     } catch (err) {
       promptAction.showToast({
         message: JSON.stringify(err)
@@ -46,10 +34,11 @@ export struct QuestionListComp {
   build() {
     Column() {
       List() {
-        ForEach(this.QuestionList, (item: QuestionItemRowModel) => {
+        ForEach(this.list, (item: QuestionItemRow) => {
           ListItem() {
             QuestionItemComp({ item })
-            // .padding({ left: 10, right: 10 })
+              .padding({ left: 10, right: 10 })
+
           }
 
         })

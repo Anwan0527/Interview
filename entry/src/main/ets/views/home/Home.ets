@@ -44,8 +44,7 @@ export struct Home {
           .layoutWeight(3)
 
         //2.打卡
-        // HdClockIn({ clockCount: this.clockCountNum })
-        HdClockIn({ clockCount: 0 })
+        HdClockIn({ clockCount: this.clockCountNum })// HdClockIn({ clockCount: 0 })
           .layoutWeight(1)
 
       }

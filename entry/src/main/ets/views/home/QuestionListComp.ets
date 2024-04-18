@@ -11,6 +11,7 @@ export struct QuestionListComp {
   @State list: QuestionItemRow[] = []
   @State op: string = ''
   @State isRefreshing: boolean = false
+  @State isLoadingMore: boolean = false
   @State page: number = 1
 
   aboutToAppear() {
@@ -19,9 +20,12 @@ export struct QuestionListComp {
 
   async getRow() {
     try {
-      this.op = 'questionBankType=10&type=' + this.qid
+      this.op = `questionBankType=10&type=${this.qid}&page=${this.page}`
       const res = await Request.get<QuestionItem>('question/list?' + this.op)
       this.list = res.data.rows!
+      if (this.page > 1) {
+        this.list.push(...res.data.rows!)
+      }
       // promptAction.showToast({
       //   message: JSON.stringify(res.data)
       // })
@@ -44,8 +48,18 @@ export struct QuestionListComp {
             }
           })
         }
+        //上拉获取更多
+        .onReachEnd(() => {
+          if (this.isLoadingMore === false) {
+            this.isLoadingMore = true
+            this.page++
+            this.getRow()
+            this.isLoadingMore = false
+          }
+        })
       }
       .onRefreshing(async () => {
+        this.page = 1 // 刷新拉到第一页
         await this.getRow()
         this.isRefreshing = false
       }) //刷新 直到列表生成后 结束刷新

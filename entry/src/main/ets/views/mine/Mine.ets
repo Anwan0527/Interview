@@ -2,11 +2,13 @@ import { Logger } from '../../common/utils/Logger'
 import { windowManager } from '../../common/utils/windowManager'
 import router from '@ohos.router'
 import { Request } from '../../common/utils/request'
-import { Auth, USER_KEY } from '../../common/utils/Auth'
 
 import { promptAction } from '@kit.ArkUI'
 import { User, UserModel } from '../../models/UserModel'
-import { HdClockIn } from '../home/HdClockIn'
+import { HdClockIn } from '../../common/components/HdClockIn'
+import { TOKEN_KEY } from '../../common/constants/token_key'
+
+PersistentStorage.PersistProp(TOKEN_KEY, "")
 
 interface Nav {
   icon: ResourceStr
@@ -105,7 +107,7 @@ export struct Mine {
 
   // 进入页面
   aboutToAppear(): void {
-    Auth.initLocalUser()
+
     windowManager.settingStatusBarLight() // 开启当前页面的状态栏文字颜色为白色
     // this.getUserList()
     this.updateUser()

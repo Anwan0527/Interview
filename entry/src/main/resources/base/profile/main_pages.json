@@ -4,6 +4,7 @@
     "pages/Login/LoginPage",
     "pages/PreviewWebPage",
     "pages/Login/WechatLoginPage",
-    "pages/AboutOur"
+    "pages/AboutOur",
+    "pages/Clickin/ClickinPage"
   ]
 }

@@ -1,0 +1,1 @@
+export const TOKEN_KEY = "Interview_token"

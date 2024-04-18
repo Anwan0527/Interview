@@ -1,10 +1,12 @@
 import { promptAction, router } from '@kit.ArkUI'
-import { Auth } from '../../common/utils/Auth'
+import { TOKEN_KEY } from '../../common/constants/token_key'
 import { Logger } from '../../common/utils/Logger'
 import { Request } from '../../common/utils/request'
 import { UserLogin } from '../../models/UserLoginModel'
 import { UserModel } from '../../models/UserModel'
 
+
+PersistentStorage.persistProp(TOKEN_KEY, "")
 
 @Entry
 @Component
@@ -14,9 +16,8 @@ struct LoginPage {
   @State isAgree: boolean = true //默认是false  现在设置true 是为了登陆方便
   @State loading: boolean = false
 
-  aboutToAppear(): void {
-    Auth.initLocalUser()
-  }
+  // aboutToAppear(): void {
+  // }
 
   async login() {
     try {
@@ -40,7 +41,7 @@ struct LoginPage {
         password: this.password
       } as UserLogin)
       //存储用户Token等信息
-      Auth.setUser(res.data)
+      AppStorage.set(TOKEN_KEY, res.data.token)
       // promptAction.showToast({
       //   message: JSON.stringify(Auth.getUser())
       // })

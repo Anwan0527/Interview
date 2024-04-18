@@ -1,8 +1,8 @@
 import { HdResponse } from '../../models/HttpResponseModel'
 import http from '@ohos.net.http'
-import { Auth } from './Auth'
 import { promptAction, router } from '@kit.ArkUI'
 import { BusinessError } from '@kit.BasicServicesKit'
+import { TOKEN_KEY } from '../constants/token_key'
 
 type HdParams = Record<string, number | string | boolean>
 
@@ -31,10 +31,9 @@ class HdHttp {
     , expectDataType: http.HttpDataType.OBJECT
     }
 
-    const currentUser = Auth.getUser()
 
-    if (currentUser.token && options.header) {
-      options.header['Authorization'] = `Bearer ${currentUser.token}`
+    if (AppStorage.get(TOKEN_KEY) && options.header) {
+      options.header['Authorization'] = 'Bearer ' + AppStorage.get(TOKEN_KEY)
     }
 
     return httpInstance.request(url, options).then(res => {
@@ -42,9 +41,9 @@ class HdHttp {
         const result = res.result as HdResponse<T>
         if (result.code === 401) {
           promptAction.showToast({ message: 'token失效' })
-          Auth.delUser()
+          AppStorage.set(TOKEN_KEY, '')
           router.pushUrl({
-            url: 'pages/LoginPage'
+            url: 'pages/Login/LoginPage'
           }, router.RouterMode.Single)
         }
         return result
@@ -74,19 +73,18 @@ class HdHttp {
       options.extraData = extraData
     }
 
-    const currentUser = Auth.getUser()
 
-    if (currentUser.token && options.header) {
-      options.header['Authorization'] = `Bear ${currentUser.token}}`
+    if (AppStorage.get(TOKEN_KEY) && options.header) {
+      options.header['Authorization'] = 'Bearer ' + AppStorage.get(TOKEN_KEY)
     }
 
     return httpInstance.request(url, options).then(res => {
       if (res.result) {
         const result = res.result as HdResponse<T>
         if (result.code === 401) {
-          Auth.delUser()
+          AppStorage.set(TOKEN_KEY, '')
           router.pushUrl({
-            url: 'pages/LoginPage'
+            url: 'pages/Login/LoginPage'
           }, router.RouterMode.Single)
         }
         return result

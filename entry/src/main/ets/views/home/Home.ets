@@ -1,9 +1,15 @@
-import { HdClockIn } from './HdClockIn'
-import { HdSearch } from './HdSearch'
+import { HdClockIn } from '../../common/components/HdClockIn'
+import { HdSearch } from '../../common/components/HdSearch'
 import { promptAction } from '@kit.ArkUI'
 import { Request } from '../../common/utils/request'
-import { UserModel } from '../../models/UserModel'
 import { HomeCategoryComp } from './HomeCategoryComp'
+import { ClockinModel } from '../../models/ClockinModel'
+
+import { GetClockinModel } from '../../models/GetClockinModel'
+import { TOKEN_KEY } from '../../common/constants/token_key'
+
+
+PersistentStorage.persistProp(TOKEN_KEY, "")
 
 @Component
 export struct Home {
@@ -11,14 +17,17 @@ export struct Home {
   @State clockCountNum: number = 0
 
   aboutToAppear() {
+
     this.getClockInfo()
+    // promptAction.showToast({
+    //   message: JSON.stringify(Auth.getUser())
+    // })
   }
 
   //获取打卡数据方法
   async getClockInfo() {
     try {
-
-      const res = await Request.get<UserModel>('clockinInfo')
+      const res = await Request.get<GetClockinModel>('clockinInfo')
       this.clockCountNum = res.data.clockinNumbers!
     } catch (err) {
       promptAction.showToast({
@@ -35,7 +44,8 @@ export struct Home {
           .layoutWeight(3)
 
         //2.打卡
-        HdClockIn({ clockCount: this.clockCountNum })
+        // HdClockIn({ clockCount: this.clockCountNum })
+        HdClockIn({ clockCount: 0 })
           .layoutWeight(1)
 
       }

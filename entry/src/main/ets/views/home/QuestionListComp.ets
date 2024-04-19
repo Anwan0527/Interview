@@ -13,6 +13,7 @@ export struct QuestionListComp {
   @State isRefreshing: boolean = false
   @State isLoadingMore: boolean = false
   @State page: number = 1
+  timeoutId = -1
 
   aboutToAppear() {
     this.getRow()
@@ -20,12 +21,22 @@ export struct QuestionListComp {
 
   async getRow() {
     try {
+      if (this.isLoadingMore) this.page++
       this.op = `questionBankType=10&type=${this.qid}&page=${this.page}`
       const res = await Request.get<QuestionItem>('question/list?' + this.op)
-      this.list = res.data.rows!
-      if (this.page > 1) {
+
+      if (this.isLoadingMore) {
         this.list.push(...res.data.rows!)
+      } else {
+        this.list = res.data.rows!
       }
+
+      // if (this.page > 1) {
+      //   this.list.push(...res.data.rows!)
+      // }
+      // else {
+      //   this.list = res.data.rows!
+      // }
       // promptAction.showToast({
       //   message: JSON.stringify(res.data)
       // })
@@ -50,15 +61,18 @@ export struct QuestionListComp {
         }
         //上拉获取更多
         .onReachEnd(() => {
-          if (this.isLoadingMore === false) {
+          // this.isLoadingMore = true
+          clearTimeout(this.timeoutId)
+          this.timeoutId = setTimeout(async () => {
             this.isLoadingMore = true
-            this.page++
-            this.getRow()
+            await this.getRow()
             this.isLoadingMore = false
-          }
+          })
+
         })
       }
       .onRefreshing(async () => {
+        // this.isRefreshing = true
         this.page = 1 // 刷新拉到第一页
         await this.getRow()
         this.isRefreshing = false

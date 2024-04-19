@@ -10,6 +10,7 @@ export struct HomeCategoryComp {
   @State
   questionTypeList: Partial<QuestionTypeModel>[] = [{} as QuestionType]
   @State index: number = 0
+  @State isShow: boolean = false //半模态
 
   aboutToAppear() {
     this.getQuesionType()
@@ -81,7 +82,12 @@ export struct HomeCategoryComp {
         Image($r('app.media.ic_home_filter'))
           .width(22)
           .height(44)
-          .objectFit(ImageFit.Contain) // 设置图片按照容器大小填满
+          .objectFit(ImageFit.Contain)// 设置图片按照容器大小填满
+            // .bindSheet(this.isShow,QuestionFilterComp)
+          .onClick(() => {
+            this.isShow = true
+          })
+
       }
       .width(54)
       .height(44)

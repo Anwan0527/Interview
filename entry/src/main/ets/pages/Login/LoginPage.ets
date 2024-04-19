@@ -124,12 +124,12 @@ struct LoginPage {
                 .enableLoading(this.loading)
             }
             Text('登录')
-              .onClick(() => {
-                this.login()
-              })
               .textAlign(TextAlign.Center)
           }
         }
+        .onClick(() => {
+          this.login()
+        })
         .borderRadius(4)
         .width(328)
         .height(45)

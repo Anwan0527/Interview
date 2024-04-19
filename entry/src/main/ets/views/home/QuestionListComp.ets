@@ -2,18 +2,19 @@
 import { Request } from '../../common/utils/request'
 import { QuestionItem, QuestionItemRow } from '../../models/QuestionItemModel'
 import { QuestionItemComp } from './QuestionItemComp'
-import { promptAction } from '@kit.ArkUI'
+import { promptAction, router } from '@kit.ArkUI'
 import { LoadingDialog } from '../../common/components/LoadingDialog'
+import { FilterParams } from './QuestionFilterComp'
 
 
 @Component
 export struct QuestionListComp {
   qid: number = 0
-  @State list: QuestionItemRow[] = []
+  @State questionList: QuestionItemRow[] = []
   @State op: string = ''
   @State isRefreshing: boolean = false
   @State isLoadingMore: boolean = false
-  @State page: number = 1
+  @State page: number = 0
   timeoutId = -1
   @State message: string = '获取中ing'
   dialog: CustomDialogController = new CustomDialogController({
@@ -21,35 +22,65 @@ export struct QuestionListComp {
     customStyle: true,
     alignment: DialogAlignment.Center
   })
+  @Prop
+  @Watch('getQuestionList')
+  activeIndex: number
+  @Prop
+  selfIndex: number
+  @Prop
+  @Watch('getQuestionList')
+  params: FilterParams = {} as FilterParams
 
-  aboutToAppear() {
-    this.getRow()
-  }
+  // aboutToAppear() {
+  //   this.getQuestionList()
+  // }
 
-  async getRow() {
+  async getQuestionList() {
     try {
-      this.dialog.open() //打开提示框
-      if (this.isLoadingMore) this.page++
-      this.op = `questionBankType=10&type=${this.qid}&page=${this.page}`
-      const res = await Request.get<QuestionItem>('question/list?' + this.op)
-
-      if (this.isLoadingMore) {
-        this.list.push(...res.data.rows!)
-      } else {
-        this.list = res.data.rows!
+      if (this.activeIndex !== this.selfIndex) {
+        return
       }
-      this.isLoadingMore = false
-      this.isRefreshing = false
+
+      this.dialog.open() //打开提示框
+      if (this.isRefreshing) {
+        this.page = 1
+      }
+      if (this.isLoadingMore) {
+        this.page++
+      }
+      this.op = `questionBankType=10&type=${this.qid}&page=${this.page}&sort=${this.params.sort}`
+      const res = await Request.get<QuestionItem>('question/list?' + this.op)
+      if (this.isRefreshing) {
+        this.questionList = res.data.rows!
+        this.isRefreshing = false
+
+      } else {
+        this.questionList.push(...res.data.rows!)
+        this.isLoadingMore = false
+
+      }
+      // //由于第一次触底 把值赋予list
+      // if (this.page == 1) this.questionList = res.data.rows!
+      // //第二次及以后触底 this.list.push->
+      // else if (this.page > 1 && res.data.pageTotal! > this.page) {
+      //   this.questionList.push(...res.data.rows!)
+      // }
+      AppStorage.setOrCreate('qlist', this.questionList)
       this.dialog.close() //关闭提示框
-      // if (this.page > 1) {
-      //   this.list.push(...res.data.rows!)
+      promptAction.showToast({
+        message: JSON.stringify(this.op)
+      })
+
+      // if (this.isLoadingMore && res.data.pageTotal! > this.page)
+      //   this.page++
+
+      // if (this.isLoadingMore && res.data.pageTotal! > this.page) {
+      //   this.questionList.push(...res.data.rows!)
+      //
+      // } else {
+      //   this.questionList = res.data.rows!
       // }
-      // else {
-      //   this.list = res.data.rows!
-      // }
-      // promptAction.showToast({
-      //   message: JSON.stringify(res.data)
-      // })
+
 
     } catch (err) {
       promptAction.showToast({
@@ -62,11 +93,33 @@ export struct QuestionListComp {
     Column() {
       Refresh({ refreshing: $$this.isRefreshing }) {
         List() {
-          ForEach(this.list, (item: QuestionItemRow) => {
+          // ForEach([1, 2, 3, 4, 5, 6], (item: number) => {
+          //   ListItem() {
+          //     QuestionItemComp({
+          //       item: {
+          //         id: '1',
+          //         stem: '请总结一下Vue2中生命周期函数有哪些' + item,
+          //         difficulty: 3,
+          //         likeCount: 10,
+          //         views: 20,
+          //         readFlag: 1
+          //       } as QuestionItemRow
+          //     })
+          //       .padding({ left: 10, right: 10 })
+          //   }
+          // })
+
+          ForEach(this.questionList, (item: QuestionItemRow) => {
             ListItem() {
               QuestionItemComp({ item })
                 .padding({ left: 10, right: 10 })
             }
+            .onClick(() => {
+              router.pushUrl({
+                url: 'pages/QuestionDetailPage',
+                params: { id: item.id }
+              })
+            })
           })
         }
         //上拉获取更多
@@ -75,16 +128,14 @@ export struct QuestionListComp {
           clearTimeout(this.timeoutId)
           this.timeoutId = setTimeout(() => {
             this.isLoadingMore = true
-            this.getRow()
-
-          })
-
+            this.getQuestionList()
+          }, 500)
         })
       }
       .onRefreshing(() => {
-        // this.isRefreshing = true
-        this.page = 1 // 刷新拉到第一页
-        this.getRow()
+        this.isRefreshing = true
+        // this.page = 1 // 刷新拉到第一页
+        this.getQuestionList()
 
       }) //刷新 直到列表生成后 结束刷新
 

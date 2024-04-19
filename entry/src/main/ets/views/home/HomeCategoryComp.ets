@@ -3,14 +3,15 @@ import { QuestionType, QuestionTypeModel } from '../../models/QuestionTypeModel'
 import { promptAction } from '@kit.ArkUI'
 import { Request } from '../../common/utils/request'
 import { QuestionListComp } from './QuestionListComp'
+import { FilterParams, QuestionFilterComp } from './QuestionFilterComp'
 
 
 @Component
 export struct HomeCategoryComp {
-  @State
-  questionTypeList: Partial<QuestionTypeModel>[] = [{} as QuestionType]
+  @State questionTypeList: QuestionTypeModel[] = []
   @State index: number = 0
   @State isShow: boolean = false //半模态
+  @State params: FilterParams = { index: this.index, sort: 0, difficult: 0 } as FilterParams
 
   aboutToAppear() {
     this.getQuesionType()
@@ -26,6 +27,22 @@ export struct HomeCategoryComp {
     } catch (err) {
       promptAction.showToast({
         message: JSON.stringify(err)
+      })
+    }
+  }
+
+  @Builder
+  filterBuilder() {
+    Column() {
+      QuestionFilterComp({
+        questionTypeList: this.questionTypeList,
+        params: this.params,
+        onSubmit: (newparams: FilterParams) => {
+          if (this.index !== newparams.index)
+            this.index = newparams.index
+          this.params = newparams
+          this.isShow = false
+        }
       })
     }
   }
@@ -63,7 +80,10 @@ export struct HomeCategoryComp {
         ForEach(this.questionTypeList, (item: QuestionTypeModel, index: number) => {
           TabContent() {
             QuestionListComp({
-              qid: item.id
+              qid: item.id,
+              selfIndex: index,
+              activeIndex: this.index,
+              params: this.params
             })
           }.tabBar(this.TabItemBuilder(item, index))
         })
@@ -83,7 +103,13 @@ export struct HomeCategoryComp {
           .width(22)
           .height(44)
           .objectFit(ImageFit.Contain)// 设置图片按照容器大小填满
-            // .bindSheet(this.isShow,QuestionFilterComp)
+          .bindSheet(this.isShow, this.filterBuilder(), {
+            height: 400,
+            showClose: false,
+            onDisappear: () => {
+              this.isShow = false
+            }
+          })
           .onClick(() => {
             this.isShow = true
           })

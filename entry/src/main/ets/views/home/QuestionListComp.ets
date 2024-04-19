@@ -5,6 +5,7 @@ import { QuestionItemComp } from './QuestionItemComp'
 import { promptAction, router } from '@kit.ArkUI'
 import { LoadingDialog } from '../../common/components/LoadingDialog'
 import { FilterParams } from './QuestionFilterComp'
+import { IvSkeleton } from '../../common/components/IvSkeleton'
 
 
 @Component
@@ -14,6 +15,7 @@ export struct QuestionListComp {
   @State op: string = ''
   @State isRefreshing: boolean = false
   @State isLoadingMore: boolean = false
+
   @State page: number = 0
   timeoutId = -1
   @State message: string = '获取中ing'
@@ -35,11 +37,12 @@ export struct QuestionListComp {
   //   this.getQuestionList()
   // }
 
+
   async getQuestionList() {
     try {
-      if (this.activeIndex !== this.selfIndex) {
+      if (this.activeIndex !== this.selfIndex)
         return
-      }
+
 
       this.dialog.open() //打开提示框
       if (this.isRefreshing) {
@@ -50,14 +53,10 @@ export struct QuestionListComp {
       }
       this.op = `questionBankType=10&type=${this.qid}&page=${this.page}&sort=${this.params.sort}`
       const res = await Request.get<QuestionItem>('question/list?' + this.op)
-      if (this.isRefreshing) {
-        this.questionList = res.data.rows!
-        this.isRefreshing = false
-
-      } else {
+      if (this.isLoadingMore) {
         this.questionList.push(...res.data.rows!)
-        this.isLoadingMore = false
-
+      } else {
+        this.questionList = res.data.rows!
       }
       // //由于第一次触底 把值赋予list
       // if (this.page == 1) this.questionList = res.data.rows!
@@ -66,6 +65,9 @@ export struct QuestionListComp {
       //   this.questionList.push(...res.data.rows!)
       // }
       AppStorage.setOrCreate('qlist', this.questionList)
+      //  关闭刷新
+      this.isRefreshing = false
+      this.isLoadingMore = false
       this.dialog.close() //关闭提示框
       promptAction.showToast({
         message: JSON.stringify(this.op)

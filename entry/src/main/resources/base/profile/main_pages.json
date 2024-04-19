@@ -6,6 +6,7 @@
     "pages/Login/WechatLoginPage",
     "pages/AboutOur",
     "pages/Clickin/ClickinPage",
-    "pages/QuestionDetailPage"
+    "pages/QuestionDetailPage",
+    "pages/SearchPage"
   ]
 }

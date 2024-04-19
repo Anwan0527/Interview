@@ -1,12 +1,13 @@
 import { HdClockIn } from '../../common/components/HdClockIn'
-import { HdSearch } from '../../common/components/HdSearch'
-import { promptAction } from '@kit.ArkUI'
+
+import { promptAction, router } from '@kit.ArkUI'
 import { Request } from '../../common/utils/request'
 import { HomeCategoryComp } from './HomeCategoryComp'
 import { ClockinModel } from '../../models/ClockinModel'
 
 import { GetClockinModel } from '../../models/GetClockinModel'
 import { TOKEN_KEY } from '../../common/constants/token_key'
+import { HdSearch } from '../../common/components/HdSearch'
 
 
 PersistentStorage.persistProp(TOKEN_KEY, "")
@@ -41,6 +42,11 @@ export struct Home {
       Row({ space: 15 }) {
         //1.搜索
         HdSearch()
+          .onClick(() => {
+            router.pushUrl({
+              url: 'pages/SearchPage'
+            })
+          })
           .layoutWeight(3)
 
         //2.打卡

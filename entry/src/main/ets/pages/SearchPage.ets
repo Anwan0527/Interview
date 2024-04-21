@@ -1,10 +1,15 @@
-import { promptAction } from '@kit.ArkUI'
+import { promptAction, router } from '@kit.ArkUI'
 import { SearchQueryStore } from '../common/utils/SearchQueryStore'
+import { SearchResultListComp } from '../views/search/SearchResultListComp'
 
 interface iSearchItemParams {
   text: string
   isShowDel: boolean
   delCallBack: () => void
+}
+
+interface iRouterParams {
+  keywordTxt: string
 }
 
 @Entry
@@ -18,6 +23,9 @@ struct SearchPage {
   @StorageProp('topHeight') topHeight: number = 0
 
   aboutToAppear(): void {
+    let routerparams = router.getParams() as iRouterParams
+    this.txtContent = routerparams.keywordTxt
+    this.isSearch = true
     this.loadData()
   }
 
@@ -75,7 +83,7 @@ struct SearchPage {
               // 打开查询数据组件
               this.isSearch = true
               //存数据
-              SearchQueryStore.saveCata(this.txtContent)
+              SearchQueryStore.saveData(this.txtContent)
               //取数据
               this.loadData()
             })
@@ -163,7 +171,8 @@ struct SearchPage {
 
       // 搜索列表组件
       if (this.isSearch) {
-        Text('请求数据->展示搜索结果')
+        SearchResultListComp({ keyword: this.txtContent })
+
       }
     }
     .title('刷个面试题')

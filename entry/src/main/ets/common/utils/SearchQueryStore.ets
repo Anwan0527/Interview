@@ -6,7 +6,7 @@ const KEY = 'keyword'
 
 export class SearchQueryStore {
   //存储数据
-  static async saveCata(data: string) {
+  static async saveData(data: string) {
     let arr = await pintance.get(KEY, []) as Array<string>
     if (arr.indexOf(data) === -1) {
       arr.push(data)

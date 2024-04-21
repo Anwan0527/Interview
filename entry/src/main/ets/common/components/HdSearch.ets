@@ -5,9 +5,26 @@ import { router } from '@kit.ArkUI'
 export struct HdSearch {
   @State
   readonlyMode: boolean = true
-  ph: string = ''
+  @State ph: string = 'html'
   bg: string = ''
   color: string = ''
+  keyword = ['html', 'css', 'javascript', 'vue', 'react']
+  count = 1
+  intervalNum: number = -1
+
+  aboutToAppear() {
+    this.intervalNum = setInterval(() => {
+      this.ph = this.keyword[this.count]
+      this.count++
+      if (this.count == this.keyword.length) {
+        this.count = 0
+      }
+    }, 5000)
+  }
+
+  aboutToDisappear() {
+    clearInterval(this.intervalNum)
+  }
 
   build() {
     Row() {
@@ -26,7 +43,12 @@ export struct HdSearch {
       .borderRadius($r('app.float.hd_search_radius'))
       .justifyContent(FlexAlign.Center)
     }.onClick(() => {
-      router.pushUrl({ url: 'pages/SearchPage' })
+      router.pushUrl({
+        url: 'pages/SearchPage',
+        params: {
+          keywordTxt: this.ph
+        }
+      })
     })
   }
 }

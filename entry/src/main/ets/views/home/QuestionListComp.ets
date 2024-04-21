@@ -5,7 +5,7 @@ import { QuestionItemComp } from './QuestionItemComp'
 import { promptAction, router } from '@kit.ArkUI'
 import { LoadingDialog } from '../../common/components/LoadingDialog'
 import { FilterParams } from './QuestionFilterComp'
-import { IvSkeleton } from '../../common/components/IvSkeleton'
+
 
 
 @Component

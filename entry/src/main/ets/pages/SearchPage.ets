@@ -1,4 +1,5 @@
 import { promptAction } from '@kit.ArkUI'
+import { SearchQueryStore } from '../common/utils/SearchQueryStore'
 
 interface iSearchItemParams {
   text: string
@@ -17,7 +18,12 @@ struct SearchPage {
   @StorageProp('topHeight') topHeight: number = 0
 
   aboutToAppear(): void {
+    this.loadData()
+  }
 
+  async loadData() {
+    const res = await SearchQueryStore.getData()
+    this.searchQueryList = res
   }
 
   @Builder
@@ -38,7 +44,8 @@ struct SearchPage {
           .onClick(() => {
             params.delCallBack()
           })
-      } else {
+      }
+      else {
         Text('')
           .width(10)
           .margin({ left: 15 })
@@ -67,6 +74,10 @@ struct SearchPage {
             .onSubmit(async () => {
               // 打开查询数据组件
               this.isSearch = true
+              //存数据
+              SearchQueryStore.saveCata(this.txtContent)
+              //取数据
+              this.loadData()
             })
 
           Image($r('app.media.ic_common_search1'))
@@ -118,7 +129,8 @@ struct SearchPage {
                   Span('全部删除')
                     .onClick(async () => {
                       promptAction.showToast({ message: '全部删除' })
-
+                      SearchQueryStore.delAll()
+                      this.loadData()
                     })
                   Span(' | ')
                   Span('完成')
@@ -140,7 +152,8 @@ struct SearchPage {
               this.SearchItem({
                 text: item, isShowDel: this.isShow,
                 delCallBack: async () => {
-                  promptAction.showToast({ message: '删除：' + item })
+                  SearchQueryStore.delByKeyWord(item)
+                  this.loadData()
                 }
               })
             })

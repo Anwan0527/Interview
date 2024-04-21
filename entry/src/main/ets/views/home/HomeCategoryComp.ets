@@ -13,7 +13,6 @@ export struct HomeCategoryComp {
   @State index: number = 0
   @State isShow: boolean = false //半模态
   @State params: FilterParams = { index: this.index, sort: 0, difficult: 0 } as FilterParams
-  @State loading: boolean = false //骨架
 
   aboutToAppear() {
     this.getQuesionType()
@@ -115,10 +114,10 @@ export struct HomeCategoryComp {
   }
 
   build() {
-    Stack({ alignContent: Alignment.TopEnd }) { //设置堆叠位置为右上角
-      if (this.loading) {
-        this.SkeletonBuilder()
-      } else {
+    if (this.questionTypeList.length == 0) {
+      this.SkeletonBuilder()
+    } else {
+      Stack({ alignContent: Alignment.TopEnd }) { //设置堆叠位置为右上角
         Tabs({ index: this.index }) {
           ForEach(this.questionTypeList, (item: QuestionTypeModel, index: number) => {
             TabContent() {

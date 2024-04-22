@@ -11,6 +11,10 @@ import { LoadingDialog } from '../../common/components/LoadingDialog'
 
 PersistentStorage.PersistProp(TOKEN_KEY, "")
 
+interface NameChange {
+  nickName: string
+}
+
 @Entry
 @Component
 struct ProfileEditPage {
@@ -100,9 +104,18 @@ struct ProfileEditPage {
 
   }
 
+  async updateNickName() {
+    const res = await Request.post<UserModel>('userInfo/profile', { nickName: this.currentUser.nickName } as NameChange)
+    promptAction.showToast({
+      message: JSON.stringify(res.message)
+    })
+    this.ReflshUserData()
+  }
+
   async ReflshUserData() {
     let res = await Request.get<UserModel>('userInfo')
     this.currentUser.avatar = res.data.avatar
+    this.currentUser.nickName = res.data.nickName
   }
 
   build() {
@@ -127,7 +140,10 @@ struct ProfileEditPage {
           ListItem() {
             Row() {
               Text('昵称')
-              TextInput({ text: this.currentUser.nickName || '昵称' })
+              TextInput({ text: this.currentUser.nickName })
+                .onChange((value) => {
+                  this.currentUser.nickName = value
+                })
                 .textAlign(TextAlign.End)
                 .layoutWeight(1)
                 .padding(0)
@@ -135,7 +151,7 @@ struct ProfileEditPage {
                 .backgroundColor(Color.Transparent)
                 .borderRadius(0)
                 .onSubmit(() => {
-                  // 修改昵称 this.updateNickName()
+                  this.updateNickName()
 
                 })
             }.width('100%').height(60).justifyContent(FlexAlign.SpaceBetween)

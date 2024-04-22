@@ -77,8 +77,8 @@ struct StudyTimePage {
               GridCol() {
                 Column() {
                   Row() {
-                    IvSkeleton()
-                    IvSkeleton()
+                    IvSkeleton({ heightValue: 22, widthValue: 170 })
+                   
                   }.width('100%').justifyContent(FlexAlign.SpaceBetween)
                   .margin({ bottom: (5) })
 

@@ -107,7 +107,6 @@ export struct Mine {
 
   // 进入页面
   aboutToAppear(): void {
-
     windowManager.settingStatusBarLight() // 开启当前页面的状态栏文字颜色为白色
     // this.getUserList()
     this.updateUser()

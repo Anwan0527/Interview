@@ -2,8 +2,8 @@
 import { hilog } from '@kit.PerformanceAnalysisKit'
 
 const DOMAIN: number = 0x0000
-const TAG: string = "tag"
-const FORMAT: string = '%{public}s' //想写几个参数就加几个参数
+const TAG: string = "mytag"
+const FORMAT: string = '%{public}s%{public}s' //想写几个参数就加几个参数
 
 //定义一个Logger类,定义四个静态方法
 export class Logger {

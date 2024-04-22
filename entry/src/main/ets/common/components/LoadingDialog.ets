@@ -1,8 +1,24 @@
+import emitter from '@ohos.events.emitter'
+
 @CustomDialog
 export struct LoadingDialog {
   @State
   message: string = ''
   controller: CustomDialogController
+
+  aboutToAppear(): void {
+    //  页面加载就注册emmiter的on事件
+    emitter.on({ eventId: 0 }, (receiveData) => {
+      // receiveData格式:{data:{msg:'完成'}}
+      this.message = receiveData.data!['msg'] as string
+      // AlertDialog.show({message:JSON.stringify(receiveData)})
+    })
+  }
+
+  aboutToDisappear(): void {
+    // 关闭loading组件时，销毁事件
+    emitter.off(0)
+  }
 
   build() {
     Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {

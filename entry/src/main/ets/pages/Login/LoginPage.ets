@@ -42,6 +42,7 @@ struct LoginPage {
       } as UserLogin)
       //存储用户Token等信息
       AppStorage.set(TOKEN_KEY, res.data.token)
+      AppStorage.setOrCreate('user', res.data)
       // promptAction.showToast({
       //   message: JSON.stringify(Auth.getUser())
       // })

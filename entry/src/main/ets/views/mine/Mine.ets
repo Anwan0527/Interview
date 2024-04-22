@@ -157,9 +157,9 @@ export struct Mine {
           }
           .width("100%")
           .onClick(() => {
-            //todo 跳转修改页面
+
             router.pushUrl({
-              url: "跳转修改页面"
+              url: 'pages/Edit/ProfileEditPage'
             })
           })
         }
@@ -188,9 +188,9 @@ export struct Mine {
         this.navBuilder({
           icon: $r("app.media.ic_mine_study"),
           name: '累计学识',
-          other: `${this.Userlist.totalTime}小时`,
+          other: `${(this.Userlist.totalTime! / 3600).toFixed(1)}小时`,
           onClick: () => {
-            router.pushUrl({ url: "跳转学时页面" }) //todo  跳转学时页面
+            router.pushUrl({ url: "pages/StudyTimePage" })
           }
         })
       }

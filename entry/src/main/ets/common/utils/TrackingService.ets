@@ -1,8 +1,14 @@
 import { TimeList } from '../../models/TimeListModel'
 import { Request } from './request'
+import { promptAction } from '@kit.ArkUI'
 
 export class TrackingService {
-  timelist: Partial<TimeList> = {}
+  timelist: TimeList = {
+    questionId: "0",
+    endTime: 0,
+    startTime: 0
+  }
+  timelistArr: TimeList[] = []
 
   setStartTime() {
     this.timelist.startTime = Date.now()
@@ -17,6 +23,15 @@ export class TrackingService {
   }
 
   save() {
-    Request.post<string>('time/tacking', [this.timelist])
+    this.timelistArr.push(this.timelist)
+    if (this.timelistArr.length >= 20) {
+      Request.post<string>('time/tracking', this.timelistArr as TimeList[])
+      this.timelistArr = []
+      promptAction.showToast({
+        message: '数据上报'
+      })
+    }
   }
 }
+
+export const trackingService = new TrackingService()

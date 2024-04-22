@@ -1,6 +1,7 @@
 import { router } from '@kit.ArkUI'
 import request from '@ohos.request'
 import { Request } from '../common/utils/request'
+import { trackingService, TrackingService } from '../common/utils/TrackingService'
 import { QuestionItem, QuestionItemRow } from '../models/QuestionItemModel'
 
 export interface QuestionDetail {
@@ -42,10 +43,20 @@ struct QuestionDetailPage {
   @StorageProp('topHeight') topHeight: number = 0
 
   aboutToAppear(): void {
+    //获取id+开始时间
+    trackingService.setStartTime()
+    trackingService.setQuestionId(this.questionId)
     // this.question.answer = 'html结构是什么？'
     const params = router.getParams() as QuestionDetail
     this.questionId = params.id
     this.getinfo()
+
+  }
+
+  aboutToDisappear(): void {
+    //离开时间+保存
+    trackingService.setEndTime()
+    trackingService.save()
   }
 
   async getinfo() {

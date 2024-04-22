@@ -66,7 +66,11 @@ export struct Mine {
         .width(16)
         .aspectRatio(1)
         .fillColor($r("app.color.common_gray_01"))
+
     }
+    .onClick(() => {
+      tool.onClick && tool.onClick()
+    })
     .height(50)
     .width("100%")
     .padding({
@@ -201,7 +205,13 @@ export struct Mine {
 
       //前端常用词
       Column() {
-        this.toolsBuilder({ icon: $r('app.media.ic_mine_notes'), name: '前端常用词' })
+        this.toolsBuilder({
+          icon: $r('app.media.ic_mine_notes'), name: '前端常用词', onClick: () => {
+            router.pushUrl({
+              url: '  pages/WordPage'
+            })
+          }
+        })
         this.toolsBuilder({ icon: $r('app.media.ic_mine_ai'), name: '面通AI' })
         this.toolsBuilder({ icon: $r('app.media.ic_mine_invite'), name: '推荐分享' })
         this.toolsBuilder({ icon: $r('app.media.ic_mine_file'), name: '意见反馈' })

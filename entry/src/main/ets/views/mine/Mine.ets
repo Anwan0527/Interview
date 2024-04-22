@@ -208,7 +208,7 @@ export struct Mine {
         this.toolsBuilder({
           icon: $r('app.media.ic_mine_notes'), name: '前端常用词', onClick: () => {
             router.pushUrl({
-              url: '  pages/WordPage'
+              url: 'pages/WordPage'
             })
           }
         })

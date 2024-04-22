@@ -1,6 +1,7 @@
 import { promptAction } from '@kit.ArkUI'
 import { util } from '@kit.ArkTS'
-import { webview } from '@kit.ArkWeb'
+import webview from '@ohos.web.webview'
+
 
 export interface WordItem {
   zh: string
@@ -21,7 +22,7 @@ export struct WordPage {
   @State
   loading: boolean = false
   // word
-  words: Record<string, WordItem[]> = {
+  @State words: Record<string, WordItem[]> = {
     'HTML5': [
       {
         "en": "strong",
@@ -88,17 +89,22 @@ export struct WordPage {
   @Builder
   codeSheetBuilder() {
     Row() {
+      // Text(this.currentCode)
       Web({
         src: $rawfile('word.html'),
         controller: this.webviewCtrl
       })
-        .onPageEnd(() => {
+        .onPageVisible(() => {
+          //   当word.html网页加载完成之后，要执行这个网页中定义的js方法 writeCode
+          // this.webviewCtrl.runJavaScript(`writeCode('${this.currentCode}')`) //错误写法
+          // this.webviewCtrl.runJavaScript('writeCode("' + this.currentCode + '")')//错误写法
           this.webviewCtrl.runJavaScript(`writeCode(\`${this.currentCode}\`)`)
-        })
+          //   AlertDialog.show({message:'加载网页完成'})
 
+        })
     }
+    .height('100%')
     .width("100%")
-    .height("100%")
     .padding({ left: 16, right: 16, top: 8, bottom: 34 })
   }
 

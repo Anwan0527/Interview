@@ -2,18 +2,22 @@
 <html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
     <title>Word</title>
-    <link rel="stylesheet"
-          href="./github.min.css">
+    <link href="./github.min.css"
+          rel="stylesheet">
     <script src="./highlight.min.js"></script>
     <style>
         code {
           font-size: 16px;
           line-height: 1.6
         }
+
+
+
+
 
     </style>
 </head>
@@ -24,8 +28,6 @@ function writeCode(str) {
   const el = document.querySelector('code');
   el.innerHTML = hljs.highlightAuto(str).value;
 }
-
-
 
 </script>
 </body>

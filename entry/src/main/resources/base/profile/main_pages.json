@@ -7,7 +7,7 @@
     "pages/AboutOur",
     "pages/Clickin/ClickinPage",
     "pages/QuestionDetailPage",
-    "pages/SearchPage",
+    "pages/Search/SearchPage",
     "pages/Edit/ProfileEditPage",
     "pages/StudyTimePage",
     "pages/WordPage",

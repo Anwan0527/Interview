@@ -1,6 +1,6 @@
 import { promptAction, router } from '@kit.ArkUI'
-import { SearchQueryStore } from '../common/utils/SearchQueryStore'
-import { SearchResultListComp } from '../views/search/SearchResultListComp'
+import { SearchQueryStore } from '../../common/utils/SearchQueryStore'
+import { SearchResultListComp } from '../../views/search/SearchResultListComp'
 
 interface iSearchItemParams {
   text: string

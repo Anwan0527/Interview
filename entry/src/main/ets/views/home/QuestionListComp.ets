@@ -30,6 +30,7 @@ export struct QuestionListComp {
   @Prop
   @Watch('getQuestionList')
   params: FilterParams = {} as FilterParams
+  @Watch('getQuestionList')
   @Prop isort: number = 0
   @Prop Project: boolean = false
 

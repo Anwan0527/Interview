@@ -94,13 +94,14 @@ export struct WordPage {
         src: $rawfile('word.html'),
         controller: this.webviewCtrl
       })
-        .onPageVisible(() => {
+        .height(400)
+        .width("100%")
+        .onPageEnd(() => {
           //   当word.html网页加载完成之后，要执行这个网页中定义的js方法 writeCode
           // this.webviewCtrl.runJavaScript(`writeCode('${this.currentCode}')`) //错误写法
           // this.webviewCtrl.runJavaScript('writeCode("' + this.currentCode + '")')//错误写法
           this.webviewCtrl.runJavaScript(`writeCode(\`${this.currentCode}\`)`)
           //   AlertDialog.show({message:'加载网页完成'})
-
         })
     }
     .height('100%')

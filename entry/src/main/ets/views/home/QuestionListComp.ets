@@ -7,7 +7,6 @@ import { LoadingDialog } from '../../common/components/LoadingDialog'
 import { FilterParams } from './QuestionFilterComp'
 
 
-
 @Component
 export struct QuestionListComp {
   qid: number = 0
@@ -15,7 +14,6 @@ export struct QuestionListComp {
   @State op: string = ''
   @State isRefreshing: boolean = false
   @State isLoadingMore: boolean = false
-
   @State page: number = 0
   timeoutId = -1
   @State message: string = '获取中ing'
@@ -32,6 +30,8 @@ export struct QuestionListComp {
   @Prop
   @Watch('getQuestionList')
   params: FilterParams = {} as FilterParams
+  @Prop isort: number = 0
+  @Prop Project: boolean = false
 
   // aboutToAppear() {
   //   this.getQuestionList()
@@ -52,6 +52,7 @@ export struct QuestionListComp {
         this.page++
       }
       this.op = `questionBankType=10&type=${this.qid}&page=${this.page}&sort=${this.params.sort}`
+      if (this.Project) this.op = `questionBankType=10&type=${this.qid}&page=${this.page}&sort=${this.isort}`
       const res = await Request.get<QuestionItem>('question/list?' + this.op)
       if (this.isLoadingMore) {
         this.questionList.push(...res.data.rows!)

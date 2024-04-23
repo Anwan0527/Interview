@@ -10,6 +10,7 @@
     "pages/SearchPage",
     "pages/Edit/ProfileEditPage",
     "pages/StudyTimePage",
-    "pages/WordPage"
+    "pages/WordPage",
+    "pages/Project/ProjectDetailPage"
   ]
 }

@@ -138,31 +138,31 @@ export struct HomeCategoryComp {
         .barMode(BarMode.Scrollable) // 设置tabs可以滚动
         .barHeight(44)
         .onChange(i => this.index = i) // 切换tabbar内容
+
+        Row() {
+          // 过滤条件按钮
+          Image($r('app.media.ic_home_filter'))
+            .width(22)
+            .height(44)
+            .objectFit(ImageFit.Contain)// 设置图片按照容器大小填满
+            .bindSheet(this.isShow, this.filterBuilder(), {
+              height: 400,
+              showClose: false,
+              onDisappear: () => {
+                this.isShow = false
+              }
+            })
+            .onClick(() => {
+              this.isShow = true
+            })
+
+        }
+        .width(54)
+        .height(44)
+        .justifyContent(FlexAlign.Center) // 图片居中对齐
+        .backgroundColor(Color.White) // 设置背景色位白色，使过滤条件图标能遮盖住tabbar的文字
       }
 
-
-      Row() {
-        // 过滤条件按钮
-        Image($r('app.media.ic_home_filter'))
-          .width(22)
-          .height(44)
-          .objectFit(ImageFit.Contain)// 设置图片按照容器大小填满
-          .bindSheet(this.isShow, this.filterBuilder(), {
-            height: 400,
-            showClose: false,
-            onDisappear: () => {
-              this.isShow = false
-            }
-          })
-          .onClick(() => {
-            this.isShow = true
-          })
-
-      }
-      .width(54)
-      .height(44)
-      .justifyContent(FlexAlign.Center) // 图片居中对齐
-      .backgroundColor(Color.White) // 设置背景色位白色，使过滤条件图标能遮盖住tabbar的文字
     }
   }
 }

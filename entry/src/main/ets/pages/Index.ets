@@ -1,6 +1,7 @@
 import { windowManager } from '../common/utils/windowManager'
 import { Home } from '../views/home/Home'
 import { Mine } from '../views/mine/Mine'
+import { Project } from '../views/project/Project'
 
 
 @Entry
@@ -37,7 +38,7 @@ struct Index {
 
           TabContent() {
             if (this.currentIndex == 1) {
-              Text('项目')
+              Project()
             }
           }
           .tabBar(this.tabBuilder('项目', 1, $r("app.media.tabbar_project"), $r("app.media.tabbar_project_fill")))

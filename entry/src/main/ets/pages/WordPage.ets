@@ -1,6 +1,7 @@
 import { promptAction } from '@kit.ArkUI'
 import { util } from '@kit.ArkTS'
 import webview from '@ohos.web.webview'
+import { WordSoundDialog } from '../views/mine/WordSoundDialog'
 
 
 export interface WordItem {
@@ -44,6 +45,11 @@ export struct WordPage {
   scroller = new Scroller()
   //实例化
   webviewCtrl: webview.WebviewController = new webview.WebviewController()
+  dialog: CustomDialogController = new CustomDialogController({
+    builder: WordSoundDialog({ wordEn: this.currentWordEn, wordZh: this.currentWordZh }),
+    customStyle: true,
+    alignment: DialogAlignment.Center
+  })
 
   aboutToAppear(): void {
     this.loadWord()
@@ -150,7 +156,7 @@ export struct WordPage {
 
             ListItem() {
               Row({ space: 6 }) {
-                Image($r('sys.media.ohos_ic_public_sound'))
+                Image($r('app.media.ic_public_sound'))
                   .width(20)
                   .aspectRatio(1)
                   .alignSelf(ItemAlign.Start)
@@ -159,6 +165,7 @@ export struct WordPage {
                     // 开启弹框读单词
                     this.currentWordEn = wordItem.en
                     this.currentWordZh = wordItem.zh
+                    this.dialog.open()
                   })
                 Column({ space: 10 }) {
                   Text(wordItem.en)

@@ -2,6 +2,7 @@ import { promptAction } from '@kit.ArkUI'
 import { util } from '@kit.ArkTS'
 import webview from '@ohos.web.webview'
 import { WordSoundDialog } from '../views/mine/WordSoundDialog'
+import { WordTestDialog } from '../views/mine/WordTestDialog'
 
 
 export interface WordItem {
@@ -48,6 +49,10 @@ export struct WordPage {
   dialog: CustomDialogController = new CustomDialogController({
     builder: WordSoundDialog({ wordEn: this.currentWordEn, wordZh: this.currentWordZh }),
     customStyle: true,
+    alignment: DialogAlignment.Center
+  })
+  dialog_yy: CustomDialogController = new CustomDialogController({
+    builder: WordTestDialog({ wordEn: this.currentWordEn }),
     alignment: DialogAlignment.Center
   })
 
@@ -183,12 +188,12 @@ export struct WordPage {
                     Text('读音评测')
                       .fontSize(12)
                       .fontColor($r('app.color.common_gray_01'))
-                    // Image($r('app.media.ic_public_audio'))
-                    //   .width(16)
-                    //   .aspectRatio(1)
+                    Image($r('app.media.ic_public_audio'))
+                      .width(16)
+                      .aspectRatio(1)
                   }
                   .onClick(() => {
-
+                    this.dialog_yy.open()
                   })
 
                   Row() {

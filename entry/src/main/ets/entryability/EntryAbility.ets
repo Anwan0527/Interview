@@ -1,4 +1,4 @@
-import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
+import { abilityAccessCtrl, AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { Logger } from '../common/utils/Logger';
@@ -6,6 +6,15 @@ import { Logger } from '../common/utils/Logger';
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
     // hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
+    //启动请求麦克风权限
+    let mgr = abilityAccessCtrl.createAtManager()
+    mgr.requestPermissionsFromUser(this.context, ['ohos.permission.MICROPHONE'])
+      .then(res => {
+        Logger.info('麦克风权限获取成功')
+      })
+      .catch(() => {
+        Logger.warn("麦克风权限申请失败")
+      })
     Logger.info('Ability onCreate')
   }
 
